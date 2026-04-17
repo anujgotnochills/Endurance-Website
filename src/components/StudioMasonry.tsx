@@ -1,0 +1,37 @@
+import { useStudioPhotos } from '@/lib/hooks';
+import Masonry, { MasonryItem } from './ui/Masonry';
+
+export default function StudioMasonry() {
+  const { data: studioPhotos } = useStudioPhotos();
+
+  const masonryItems: MasonryItem[] = studioPhotos.map(p => ({
+    id: p.id,
+    img: p.image_url,
+    url: '#',
+    height: p.height,
+  }));
+
+  return (
+    <section className="relative w-full py-12 md:py-20 px-3 sm:px-4 md:px-8 bg-transparent overflow-hidden">
+      <div className="text-center mb-10 md:mb-16 relative z-10 px-4 md:px-6">
+        <p className="text-primary font-black text-sm tracking-widest uppercase mb-3">
+          Studio Showcase
+        </p>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-foreground mb-4">
+          Glimpses into our Studio
+        </h2>
+      </div>
+
+      <div className="max-w-[95%] md:max-w-[1400px] mx-auto min-h-[400px] md:min-h-[600px]">
+        <Masonry
+          items={masonryItems}
+          animateFrom="random"
+          stagger={0.03}
+          scaleOnHover={true}
+          hoverScale={0.98}
+          blurToFocus={true}
+        />
+      </div>
+    </section>
+  );
+}
