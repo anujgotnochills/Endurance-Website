@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useNavigate } from 'react-router-dom';
-import { Images, MessageSquareQuote, Film, Award, LogOut, LayoutDashboard, Menu, X, Clapperboard } from 'lucide-react';
-import GalleryManager from '@/components/dashboard/GalleryManager';
+import { MessageSquareQuote, Film, Award, LogOut, LayoutDashboard, Menu, X, Clapperboard } from 'lucide-react';
 import TestimonialsManager from '@/components/dashboard/TestimonialsManager';
 import ReelsManager from '@/components/dashboard/ReelsManager';
 import LogosManager from '@/components/dashboard/LogosManager';
 import StudioManager from '@/components/dashboard/StudioManager';
 
-type Tab = 'gallery' | 'testimonials' | 'reels' | 'logos' | 'studio';
+type Tab = 'testimonials' | 'reels' | 'logos' | 'studio';
 
 const tabs: { id: Tab; label: string; icon: React.ElementType }[] = [
-  { id: 'gallery', label: 'Gallery', icon: Images },
   { id: 'testimonials', label: 'Testimonials', icon: MessageSquareQuote },
   { id: 'reels', label: 'Reels / Videos', icon: Film },
   { id: 'logos', label: 'Partner Logos', icon: Award },
@@ -19,7 +17,7 @@ const tabs: { id: Tab; label: string; icon: React.ElementType }[] = [
 ];
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState<Tab>('gallery');
+  const [activeTab, setActiveTab] = useState<Tab>('testimonials');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -111,7 +109,7 @@ export default function Dashboard() {
             <h2 className="text-white text-lg md:text-xl font-black flex items-center gap-2 md:gap-3">
               {(() => {
                 const tab = tabs.find(t => t.id === activeTab);
-                const Icon = tab?.icon || Images;
+                const Icon = tab?.icon ?? LayoutDashboard;
                 return <><Icon size={20} className="text-purple-500 md:w-6 md:h-6" /> {tab?.label} Manager</>;
               })()}
             </h2>
@@ -121,7 +119,6 @@ export default function Dashboard() {
 
         {/* Content Area */}
         <div className="p-4 md:p-8 flex-1">
-          {activeTab === 'gallery' && <GalleryManager />}
           {activeTab === 'testimonials' && <TestimonialsManager />}
           {activeTab === 'reels' && <ReelsManager />}
           {activeTab === 'logos' && <LogosManager />}

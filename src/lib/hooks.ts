@@ -1,55 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from './supabase';
 
-// ─── Gallery Photos ───
-export interface GalleryPhoto {
-  id: string;
-  image_url: string;
-  caption: string;
-  display_order: number;
-}
-
-const defaultGalleryPhotos = [
-  { id: '1', image_url: '/media/curved-images/akashh.webp', caption: 'pepsodent saab', display_order: 0 },
-  { id: '2', image_url: '/media/curved-images/gaurav.webp', caption: 'vice pepsodent saab', display_order: 1 },
-  { id: '3', image_url: '/media/curved-images/bca-syncup.webp', caption: 'BCA Sync Up', display_order: 2 },
-  { id: '4', image_url: '/media/curved-images/bcaa.webp', caption: 'BCA Team', display_order: 3 },
-  { id: '5', image_url: '/media/curved-images/cb-syncup.webp', caption: 'CB Sync Up', display_order: 4 },
-  { id: '6', image_url: '/media/curved-images/groupp.webp', caption: 'Group Photo', display_order: 5 },
-  { id: '7', image_url: '/media/curved-images/himanshi-syncup.webp', caption: 'Himanshi Sync Up', display_order: 6 },
-  { id: '8', image_url: '/media/curved-images/hiya-sak.webp', caption: 'Hiya & Saksham', display_order: 7 },
-  { id: '9', image_url: '/media/curved-images/hiyaa.webp', caption: 'Hiya', display_order: 8 },
-  { id: '10', image_url: '/media/curved-images/sak-price.webp', caption: 'Saksham', display_order: 9 },
-  { id: '11', image_url: '/media/curved-images/svee-syncup.webp', caption: 'Svee Sync Up', display_order: 10 },
-  { id: '12', image_url: '/media/curved-images/trinity.webp', caption: 'Trinity', display_order: 11 },
-];
-
-export function useGalleryPhotos() {
-  const [data, setData] = useState<GalleryPhoto[]>(defaultGalleryPhotos);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchPhotos();
-  }, []);
-
-  async function fetchPhotos() {
-    try {
-      const { data: photos, error } = await supabase
-        .from('gallery_photos')
-        .select('*')
-        .order('display_order', { ascending: true });
-      if (error) throw error;
-      if (photos && photos.length > 0) setData(photos);
-    } catch {
-      console.warn('Using default gallery photos');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return { data, loading, refetch: fetchPhotos };
-}
-
 // ─── Testimonials ───
 export interface Testimonial {
   id: string;
