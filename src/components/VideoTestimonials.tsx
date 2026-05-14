@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useTestimonials, extractYoutubeVideoId } from "@/lib/hooks";
-import YoutubeLazyPlayer from "@/components/YoutubeLazyPlayer";
 
 const FALLBACK_MP4_SOURCES = [
   "https://www.w3schools.com/html/mov_bbb.mp4",
@@ -96,11 +95,6 @@ function ClipPlayer({ url }: { url: string }) {
   );
 }
 
-/** Uniform grid tiles on small screens — widths come from grid, not fixed w-32/w-40 tokens. */
-function mobileBandCardClass() {
-  return "w-full aspect-[10/13] h-full !max-w-none";
-}
-
 function VideoClipCard({
   url,
   className,
@@ -144,7 +138,12 @@ export default function VideoTestimonials() {
   const sources =
     dashboardSources.length > 0 ? dashboardSources : FALLBACK_MP4_SOURCES;
 
-  const urlAt = (i: number) => sources[i % sources.length];
+  /** Mobile: up to 10 clips, tripled for seamless auto marquee. */
+  const mobileVideos = useMemo(() => sources.slice(0, 10), [sources]);
+  const mobileMarqueeTrack = useMemo(
+    () => [...mobileVideos, ...mobileVideos, ...mobileVideos],
+    [mobileVideos]
+  );
 
   return (
     <section className="relative w-full pt-8 pb-16 sm:pt-6 md:pt-10 md:pb-24 xl:pt-16 xl:pb-24 overflow-hidden bg-transparent z-10 flex flex-col items-center">
@@ -169,19 +168,36 @@ export default function VideoTestimonials() {
             </p>
           </div>
 
-          {/* Videos block: all 8 videos below copy */}
-          <div className="mt-3 grid w-full grid-cols-2 gap-x-3 gap-y-4 sm:gap-x-4 sm:gap-y-5 max-w-sm mx-auto">
-            {[0, 1, 2, 3, 4, 5, 6, 7].map((slotIdx) => {
-              const slot = SLOT_LAYOUT[slotIdx];
-              return (
-                <VideoClipCard
-                  key={`mob-all-${slotIdx}`}
-                  url={urlAt(slotIdx)}
-                  rotation={slot.rotation}
-                  className={mobileBandCardClass()}
-                />
-              );
-            })}
+          {/* Videos: single auto-scrolling row */}
+          <div className="relative mt-3 w-full max-w-full overflow-hidden pb-2">
+            <div className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-12 bg-gradient-to-r from-[#08080b] to-transparent sm:w-16" />
+            <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-12 bg-gradient-to-l from-[#08080b] to-transparent sm:w-16" />
+            {mobileVideos.length > 0 && (
+              <div
+                className="flex w-max items-center"
+                style={{
+                  animation: 'video-testimonials-marquee 52s linear infinite',
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLDivElement).style.animationPlayState = 'paused';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLDivElement).style.animationPlayState = 'running';
+                }}
+              >
+                {mobileMarqueeTrack.map((url, i) => {
+                  const slot = SLOT_LAYOUT[i % SLOT_LAYOUT.length];
+                  return (
+                    <VideoClipCard
+                      key={`mob-mq-${url}-${i}`}
+                      url={url}
+                      rotation={slot.rotation}
+                      className="mx-1.5 w-28 shrink-0 aspect-[10/13] !max-w-none sm:mx-2 sm:w-32"
+                    />
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
 
@@ -272,6 +288,12 @@ export default function VideoTestimonials() {
         </div>
         </div>
       </div>
+      <style>{`
+        @keyframes video-testimonials-marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(calc(-100% / 3)); }
+        }
+      `}</style>
     </section>
   );
 }

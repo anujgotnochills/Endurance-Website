@@ -25,6 +25,8 @@ export default function StudioManager() {
   const [newCaption, setNewCaption] = useState('');
   const [newHeight, setNewHeight] = useState(400);
   const [dragActive, setDragActive] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
+  const [statusType, setStatusType] = useState<'success' | 'error' | ''>('');
 
   useEffect(() => { fetchPhotos(); }, []);
 
@@ -34,39 +36,72 @@ export default function StudioManager() {
       .from('studio_photos')
       .select('*')
       .order('display_order');
-    if (!error && data) setPhotos(data);
+    if (error) {
+      console.error('Failed to fetch studio photos:', error.message);
+      setStatusType('error');
+      setStatusMessage(`Could not load studio photos: ${error.message}`);
+    } else if (data) {
+      setPhotos(data);
+      if (statusType === 'error') {
+        setStatusType('');
+        setStatusMessage('');
+      }
+    }
     setLoading(false);
   }
 
   async function uploadFile(file: File) {
     setUploading(true);
-    const fileExt = file.name.split('.').pop();
-    const fileName = `studio_${Date.now()}.${fileExt}`;
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `studio_${Date.now()}.${fileExt}`;
+      const filePath = `studio/${fileName}`;
 
-    const { error: uploadError } = await supabase.storage
-      .from('asset endurance')
-      .upload(`studio/${fileName}`, file, { cacheControl: '3600', upsert: false });
+      const { error: uploadError } = await supabase.storage
+        .from('asset endurance')
+        .upload(filePath, file, { cacheControl: '3600', upsert: false });
 
-    if (uploadError) {
-      alert('Upload failed: ' + uploadError.message);
+      if (uploadError) {
+        throw new Error(`Storage upload failed: ${uploadError.message}`);
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('asset endurance')
+        .getPublicUrl(filePath);
+
+      const fallbackCaption = newCaption || file.name.replace(/\.[^/.]+$/, '');
+      const insertPayload = {
+        image_url: publicUrl,
+        caption: fallbackCaption,
+        height: newHeight,
+        display_order: photos.length,
+      };
+
+      const { data: insertedRows, error: insertError } = await supabase
+        .from('studio_photos')
+        .insert(insertPayload)
+        .select('*');
+
+      if (insertError) {
+        throw new Error(`Database insert failed: ${insertError.message}`);
+      }
+
+      const inserted = insertedRows?.[0];
+      if (inserted) {
+        setPhotos(prev => [...prev, inserted].sort((a, b) => a.display_order - b.display_order));
+      }
+      setNewCaption('');
+      setStatusType('success');
+      setStatusMessage('Studio photo uploaded successfully.');
+      await fetchPhotos();
+    } catch (e) {
+      const message = e instanceof Error ? e.message : 'Unknown studio upload error';
+      console.error('Studio upload failed:', message);
+      setStatusType('error');
+      setStatusMessage(message);
+    } finally {
       setUploading(false);
-      return;
     }
-
-    const { data: { publicUrl } } = supabase.storage
-      .from('asset endurance')
-      .getPublicUrl(`studio/${fileName}`);
-
-    await supabase.from('studio_photos').insert({
-      image_url: publicUrl,
-      caption: newCaption || file.name.replace(/\.[^/.]+$/, ''),
-      height: newHeight,
-      display_order: photos.length,
-    });
-
-    setNewCaption('');
-    setUploading(false);
-    fetchPhotos();
   }
 
   async function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -87,9 +122,18 @@ export default function StudioManager() {
     try {
       const path = imageUrl.split('/studio/')[1];
       if (path) await supabase.storage.from('asset endurance').remove([`studio/${path}`]);
-    } catch { /* ignore storage errors */ }
-    await supabase.from('studio_photos').delete().eq('id', id);
-    fetchPhotos();
+    } catch {
+      /* ignore storage errors */
+    }
+    const { error } = await supabase.from('studio_photos').delete().eq('id', id);
+    if (error) {
+      setStatusType('error');
+      setStatusMessage(`Delete failed: ${error.message}`);
+    } else {
+      setStatusType('success');
+      setStatusMessage('Studio photo deleted.');
+    }
+    await fetchPhotos();
   }
 
   async function updateCaption(id: string, caption: string) {
@@ -212,6 +256,17 @@ export default function StudioManager() {
             </div>
           )}
         </div>
+        {statusMessage && (
+          <div
+            className={`text-xs md:text-sm font-medium px-3 py-2 rounded-lg border ${
+              statusType === 'error'
+                ? 'text-red-300 border-red-500/30 bg-red-500/10'
+                : 'text-emerald-300 border-emerald-500/30 bg-emerald-500/10'
+            }`}
+          >
+            {statusMessage}
+          </div>
+        )}
       </div>
 
       {/* Photos Grid */}

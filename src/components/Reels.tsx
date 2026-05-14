@@ -1,6 +1,6 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { useReels } from '@/lib/hooks';
-import YoutubeLazyPlayer from '@/components/YoutubeLazyPlayer';
+import { cn } from '@/lib/utils';
 
 interface Reel {
   id: string;
@@ -10,13 +10,24 @@ interface Reel {
 }
 
 
-const ReelCard = ({ reel }: { reel: Reel }) => (
+const ReelCard = ({
+  reel,
+  layout = 'marquee',
+}: {
+  reel: Reel;
+  layout?: 'marquee' | 'scroll';
+}) => (
   <a
     href={reel.youtubeUrl}
     target="_blank"
     rel="noopener noreferrer"
-    className="group relative block h-[320px] w-44 shrink-0 overflow-hidden rounded-2xl bg-black shadow-xl sm:h-[426px] sm:w-60 md:h-[455px] md:w-64 sm:rounded-3xl"
-    style={{ margin: '0 6px' }}
+    className={cn(
+      'group relative block overflow-hidden rounded-2xl bg-black shadow-xl sm:rounded-3xl',
+      layout === 'marquee'
+        ? 'h-[320px] w-44 shrink-0 sm:h-[426px] sm:w-60 md:h-[455px] md:w-64'
+        : 'h-[268px] w-36 shrink-0 sm:h-[300px] sm:w-40'
+    )}
+    style={layout === 'marquee' || layout === 'scroll' ? { margin: '0 6px' } : undefined}
   >
     {/* Phone-frame border */}
     <div className="absolute inset-0 rounded-3xl ring-2 ring-white/10 z-10 pointer-events-none" />
@@ -56,8 +67,15 @@ const Reels = () => {
     title: r.title,
   }));
 
-  // Duplicate reels for seamless infinite scroll
+  // Duplicate reels for seamless infinite scroll (desktop marquee)
   const doubled = [...reels, ...reels, ...reels];
+
+  /** Mobile / small screens: up to 10 reels, tripled for seamless auto marquee. */
+  const scrollReels = useMemo(() => reels.slice(0, 10), [reels]);
+  const mobileMarquee = useMemo(
+    () => [...scrollReels, ...scrollReels, ...scrollReels],
+    [scrollReels]
+  );
 
   return (
     <section id="portfolio" className="relative py-20 lg:pt-8 lg:pb-14 bg-background overflow-hidden">
@@ -68,7 +86,38 @@ const Reels = () => {
         <p className="text-base md:text-lg text-muted-foreground font-medium">A glimpse of the stories, brands, and moments we’ve brought to life.</p>
       </div>
 
-      <div className="relative w-full overflow-hidden flex flex-col gap-6">
+      {/* Mobile & tablet: single auto-scrolling row (same technique as desktop marquee) */}
+      <div className="relative w-full overflow-hidden pb-4 lg:hidden">
+        <div
+          className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-16 sm:w-20"
+          style={{ background: 'linear-gradient(to right, var(--background), transparent)' }}
+        />
+        <div
+          className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-16 sm:w-20"
+          style={{ background: 'linear-gradient(to left, var(--background), transparent)' }}
+        />
+        {mobileMarquee.length > 0 && (
+          <div
+            className="flex items-center"
+            style={{
+              width: 'max-content',
+              animation: 'reels-marquee-left 50s linear infinite',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLDivElement).style.animationPlayState = 'paused';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLDivElement).style.animationPlayState = 'running';
+            }}
+          >
+            {mobileMarquee.map((reel, i) => (
+              <ReelCard key={`mob-mq-${reel.id}-${i}`} reel={reel} layout="scroll" />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="relative hidden w-full overflow-hidden lg:flex flex-col gap-6">
         {/* Left fade */}
         <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
           style={{ background: 'linear-gradient(to right, var(--background), transparent)' }} />
