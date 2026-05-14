@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { useReels } from '@/lib/hooks';
 import { cn } from '@/lib/utils';
 
@@ -9,30 +9,22 @@ interface Reel {
   title: string;
 }
 
-
-const ReelCard = ({
-  reel,
-  layout = 'marquee',
-}: {
-  reel: Reel;
-  layout?: 'marquee' | 'scroll';
-}) => (
+/** One strip: compact on small screens, original marquee sizes from md up. */
+const ReelCard = ({ reel }: { reel: Reel }) => (
   <a
     href={reel.youtubeUrl}
     target="_blank"
     rel="noopener noreferrer"
     className={cn(
-      'group relative block overflow-hidden rounded-2xl bg-black shadow-xl sm:rounded-3xl',
-      layout === 'marquee'
-        ? 'h-[320px] w-44 shrink-0 sm:h-[426px] sm:w-60 md:h-[455px] md:w-64'
-        : 'h-[268px] w-36 shrink-0 sm:h-[300px] sm:w-40'
+      'group relative block h-[268px] w-36 shrink-0 overflow-hidden rounded-2xl bg-black shadow-xl sm:h-[300px] sm:w-40 sm:rounded-3xl',
+      'md:h-[320px] md:w-44 md:rounded-3xl',
+      'lg:h-[426px] lg:w-60',
+      'xl:h-[455px] xl:w-64'
     )}
-    style={layout === 'marquee' || layout === 'scroll' ? { margin: '0 6px' } : undefined}
+    style={{ margin: '0 6px' }}
   >
-    {/* Phone-frame border */}
-    <div className="absolute inset-0 rounded-3xl ring-2 ring-white/10 z-10 pointer-events-none" />
+    <div className="pointer-events-none absolute inset-0 rounded-3xl ring-2 ring-white/10 z-10" />
 
-    {/* Poster loads first; muted autoplay embed when card enters view */}
     <img
       src={`https://i.ytimg.com/vi/${reel.videoId}/hqdefault.jpg`}
       alt={reel.title}
@@ -46,7 +38,6 @@ const ReelCard = ({
       </span>
     </div>
 
-    {/* Hover overlay */}
     <div className="pointer-events-none absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center z-20">
       <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/90 text-white text-xs font-black px-3 py-1.5 rounded-full tracking-wide">
         Watch Full ↗
@@ -56,10 +47,8 @@ const ReelCard = ({
 );
 
 const Reels = () => {
-  const trackRef = useRef<HTMLDivElement>(null);
   const { data: reelsData } = useReels();
 
-  // Map Supabase data to component format
   const reels: Reel[] = reelsData.map(r => ({
     id: r.id,
     youtubeUrl: r.youtube_url,
@@ -67,15 +56,7 @@ const Reels = () => {
     title: r.title,
   }));
 
-  // Duplicate reels for seamless infinite scroll (desktop marquee)
-  const doubled = [...reels, ...reels, ...reels];
-
-  /** Mobile / small screens: up to 10 reels, tripled for seamless auto marquee. */
-  const scrollReels = useMemo(() => reels.slice(0, 10), [reels]);
-  const mobileMarquee = useMemo(
-    () => [...scrollReels, ...scrollReels, ...scrollReels],
-    [scrollReels]
-  );
+  const marqueeTrack = useMemo(() => [...reels, ...reels, ...reels], [reels]);
 
   return (
     <section id="portfolio" className="relative py-20 lg:pt-8 lg:pb-14 bg-background overflow-hidden">
@@ -86,22 +67,21 @@ const Reels = () => {
         <p className="text-base md:text-lg text-muted-foreground font-medium">A glimpse of the stories, brands, and moments we’ve brought to life.</p>
       </div>
 
-      {/* Mobile & tablet: single auto-scrolling row (same technique as desktop marquee) */}
-      <div className="relative w-full overflow-hidden pb-4 lg:hidden">
+      <div className="relative w-full overflow-hidden pb-4 lg:pb-6">
         <div
-          className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-16 sm:w-20"
+          className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-16 sm:w-20 lg:w-24"
           style={{ background: 'linear-gradient(to right, var(--background), transparent)' }}
         />
         <div
-          className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-16 sm:w-20"
+          className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-16 sm:w-20 lg:w-24"
           style={{ background: 'linear-gradient(to left, var(--background), transparent)' }}
         />
-        {mobileMarquee.length > 0 && (
+        {marqueeTrack.length > 0 && (
           <div
             className="flex items-center"
             style={{
               width: 'max-content',
-              animation: 'reels-marquee-left 50s linear infinite',
+              animation: 'reels-marquee-left 48s linear infinite',
             }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLDivElement).style.animationPlayState = 'paused';
@@ -110,72 +90,18 @@ const Reels = () => {
               (e.currentTarget as HTMLDivElement).style.animationPlayState = 'running';
             }}
           >
-            {mobileMarquee.map((reel, i) => (
-              <ReelCard key={`mob-mq-${reel.id}-${i}`} reel={reel} layout="scroll" />
+            {marqueeTrack.map((reel, i) => (
+              <ReelCard key={`reels-mq-${reel.id}-${i}`} reel={reel} />
             ))}
           </div>
         )}
       </div>
 
-      <div className="relative hidden w-full overflow-hidden lg:flex flex-col gap-6">
-        {/* Left fade */}
-        <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-          style={{ background: 'linear-gradient(to right, var(--background), transparent)' }} />
-        {/* Right fade */}
-        <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-          style={{ background: 'linear-gradient(to left, var(--background), transparent)' }} />
-
-        {/* Line 1 - Scrolling Left */}
-        <div
-          ref={trackRef}
-          className="flex items-center"
-          style={{
-            width: 'max-content',
-            animation: 'reels-marquee-left 45s linear infinite',
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLDivElement).style.animationPlayState = 'paused';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLDivElement).style.animationPlayState = 'running';
-          }}
-        >
-          {doubled.slice(0, Math.floor(doubled.length / 2)).map((reel, i) => (
-            <ReelCard key={`top-${reel.id}-${i}`} reel={reel} />
-          ))}
-        </div>
-
-        {/* Line 2 - Scrolling Right */}
-        <div
-          className="flex items-center"
-          style={{
-            width: 'max-content',
-            animation: 'reels-marquee-right 40s linear infinite',
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLDivElement).style.animationPlayState = 'paused';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLDivElement).style.animationPlayState = 'running';
-          }}
-        >
-          {doubled.slice(Math.floor(doubled.length / 2)).map((reel, i) => (
-            <ReelCard key={`bottom-${reel.id}-${i}`} reel={reel} />
-          ))}
-        </div>
-      </div>
-
-      {/* Marquee keyframe + hide scrollbar */}
       <style>{`
         @keyframes reels-marquee-left {
           0%   { transform: translateX(0); }
           100% { transform: translateX(calc(-100% / 3)); }
         }
-        @keyframes reels-marquee-right {
-          0%   { transform: translateX(calc(-100% / 3)); }
-          100% { transform: translateX(0); }
-        }
-        .reels-marquee-track::-webkit-scrollbar { display: none; }
       `}</style>
     </section>
   );

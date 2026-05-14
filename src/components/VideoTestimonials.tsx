@@ -138,11 +138,11 @@ export default function VideoTestimonials() {
   const sources =
     dashboardSources.length > 0 ? dashboardSources : FALLBACK_MP4_SOURCES;
 
-  /** Mobile: up to 10 clips, tripled for seamless auto marquee. */
-  const mobileVideos = useMemo(() => sources.slice(0, 10), [sources]);
-  const mobileMarqueeTrack = useMemo(
-    () => [...mobileVideos, ...mobileVideos, ...mobileVideos],
-    [mobileVideos]
+  /** Up to 10 clips, tripled for seamless auto marquee (all breakpoints). */
+  const stripVideos = useMemo(() => sources.slice(0, 10), [sources]);
+  const marqueeTrack = useMemo(
+    () => [...stripVideos, ...stripVideos, ...stripVideos],
+    [stripVideos]
   );
 
   return (
@@ -150,29 +150,26 @@ export default function VideoTestimonials() {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1a0a2e]/20 to-transparent pointer-events-none" />
 
       <div className="relative w-full max-w-[95%] md:max-w-[90%] mx-auto">
-        {/* Tablet / mobile: all copy first, then all videos (desktop keeps 3-column layout below) */}
-        <div className="xl:hidden flex flex-col items-center gap-6 md:gap-8 w-full mt-0">
-          {/* Copy block */}
-          <span className="px-6 py-2.5 rounded-full bg-primary text-white text-base font-bold border border-primary/60 shadow-md backdrop-blur-sm">
+        <div className="flex flex-col items-center gap-6 md:gap-8 xl:gap-10 w-full mt-0 xl:mt-4">
+          <span className="px-6 py-2.5 xl:px-7 xl:py-3 rounded-full bg-primary text-white text-base font-bold border border-primary/60 shadow-md xl:shadow-lg backdrop-blur-sm xl:backdrop-blur-md xl:mb-2 xl:transition-transform xl:hover:scale-105">
             Testimonials
           </span>
-          <div className="my-1 flex flex-col items-center text-center px-2">
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-tight mb-1">
+          <div className="my-1 flex flex-col items-center text-center px-2 xl:px-4">
+            <h2 className="text-3xl sm:text-4xl xl:text-5xl font-black text-white tracking-tight leading-tight mb-1 xl:mb-2 xl:leading-none">
               Trusted by Brands,
             </h2>
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white/50 tracking-tight leading-tight mb-2">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold text-white/50 tracking-tight leading-tight mb-2 xl:mb-8 xl:leading-none">
               Creators & Businesses
             </h3>
-            <p className="text-sm sm:text-base text-white/60 max-w-md mx-auto text-center font-medium">
+            <p className="text-sm sm:text-base xl:text-lg text-white/60 max-w-md xl:max-w-sm mx-auto text-center font-medium xl:leading-relaxed">
               Hear from the clients who trusted us with their stories.
             </p>
           </div>
 
-          {/* Videos: single auto-scrolling row */}
-          <div className="relative mt-3 w-full max-w-full overflow-hidden pb-2">
-            <div className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-12 bg-gradient-to-r from-[#08080b] to-transparent sm:w-16" />
-            <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-12 bg-gradient-to-l from-[#08080b] to-transparent sm:w-16" />
-            {mobileVideos.length > 0 && (
+          <div className="relative mt-1 xl:mt-4 w-full max-w-full overflow-hidden pb-2 xl:pb-4">
+            <div className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-12 bg-gradient-to-r from-[#08080b] to-transparent sm:w-16 xl:w-24" />
+            <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-12 bg-gradient-to-l from-[#08080b] to-transparent sm:w-16 xl:w-24" />
+            {stripVideos.length > 0 && (
               <div
                 className="flex w-max items-center"
                 style={{
@@ -185,107 +182,20 @@ export default function VideoTestimonials() {
                   (e.currentTarget as HTMLDivElement).style.animationPlayState = 'running';
                 }}
               >
-                {mobileMarqueeTrack.map((url, i) => {
+                {marqueeTrack.map((url, i) => {
                   const slot = SLOT_LAYOUT[i % SLOT_LAYOUT.length];
                   return (
                     <VideoClipCard
-                      key={`mob-mq-${url}-${i}`}
+                      key={`tt-mq-${url}-${i}`}
                       url={url}
                       rotation={slot.rotation}
-                      className="mx-1.5 w-28 shrink-0 aspect-[10/13] !max-w-none sm:mx-2 sm:w-32"
+                      className="mx-1.5 w-28 shrink-0 aspect-[10/13] !max-w-none sm:mx-2 sm:w-32 md:w-36 xl:w-44 xl:mx-2.5 xl:aspect-[10/13] 2xl:w-48"
                     />
                   );
                 })}
               </div>
             )}
           </div>
-        </div>
-
-        {/* Desktop: left clips | center copy | right clips */}
-        <div className="hidden xl:flex flex-row items-center justify-between gap-8 md:gap-12 xl:gap-8 w-full mt-16 xl:mt-0">
-        {/* LEFT cluster */}
-        <div className="w-full xl:w-[35%] flex flex-wrap xl:flex-nowrap justify-center xl:justify-end gap-4 md:gap-6 lg:gap-8">
-          <div className="flex flex-col gap-4 md:gap-6 mt-0 xl:-mt-12">
-            {SLOT_LAYOUT.slice(0, 2).map((slot, i) => (
-              <VideoClipCard
-                key={`left-a-${i}`}
-                url={sources[i % sources.length]}
-                rotation={slot.rotation}
-                className={slot.className}
-              />
-            ))}
-          </div>
-          <div className="flex flex-col gap-4 md:gap-6 mt-12 xl:mt-8">
-            {SLOT_LAYOUT.slice(2, 4).map((slot, i) => (
-              <VideoClipCard
-                key={`left-b-${i}`}
-                url={sources[(i + 2) % sources.length]}
-                rotation={slot.rotation}
-                className={slot.className}
-              />
-            ))}
-          </div>
-          <div className="hidden sm:flex flex-col gap-4 md:gap-6 mt-4 xl:-mt-4">
-            {SLOT_LAYOUT.slice(4, 6).map((slot, i) => (
-              <VideoClipCard
-                key={`left-c-${i}`}
-                url={sources[(i + 4) % sources.length]}
-                rotation={slot.rotation}
-                className={slot.className}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Desktop center copy */}
-        <div className="flex flex-col items-center text-center w-[30%] z-10 px-4">
-          <span className="px-7 py-3 rounded-full bg-primary text-white text-base font-bold mb-8 border border-primary/60 shadow-lg backdrop-blur-md transition-transform hover:scale-105">
-            Testimonials
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight mb-2 leading-none">
-            Trusted by Brands,
-          </h2>
-          <h3 className="text-4xl lg:text-5xl font-bold text-white/50 tracking-tight mb-8 leading-none">
-            Creators & Businesses
-          </h3>
-          <p className="text-lg text-white/60 max-w-sm mx-auto font-medium leading-relaxed">
-            Hear from the clients who trusted us with their stories.
-          </p>
-        </div>
-
-        {/* RIGHT cluster */}
-        <div className="w-full xl:w-[35%] flex flex-wrap xl:flex-nowrap justify-center xl:justify-start gap-4 md:gap-6 lg:gap-8">
-          <div className="hidden sm:flex flex-col gap-4 md:gap-6 mt-8 xl:mt-4">
-            {SLOT_LAYOUT.slice(6, 8).map((slot, i) => (
-              <VideoClipCard
-                key={`right-a-${i}`}
-                url={sources[(i + 6) % sources.length]}
-                rotation={slot.rotation}
-                className={slot.className}
-              />
-            ))}
-          </div>
-          <div className="flex flex-col gap-4 md:gap-6 mt-4 xl:-mt-8">
-            {SLOT_LAYOUT.slice(8, 10).map((slot, i) => (
-              <VideoClipCard
-                key={`right-b-${i}`}
-                url={sources[(i + 8) % sources.length]}
-                rotation={slot.rotation}
-                className={slot.className}
-              />
-            ))}
-          </div>
-          <div className="flex flex-col gap-4 md:gap-6 mt-16 xl:mt-12">
-            {SLOT_LAYOUT.slice(10, 12).map((slot, i) => (
-              <VideoClipCard
-                key={`right-c-${i}`}
-                url={sources[(i + 10) % sources.length]}
-                rotation={slot.rotation}
-                className={slot.className}
-              />
-            ))}
-          </div>
-        </div>
         </div>
       </div>
       <style>{`
