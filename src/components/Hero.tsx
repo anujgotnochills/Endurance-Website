@@ -32,61 +32,62 @@ export default function Hero() {
     {
       id: 1,
       src: "/media/hero-opt/1.png",
-      alt: "Video Production",
+      alt: "Social Media",
       rotation: -12,
       zIndex: 1,
       translateX: -60,
       translateY: 15,
-      link: "https://www.youtube.com/@FounderGyaan",
+      link: "https://www.instagram.com/crowneplazamayurvihar",
     },
     {
       id: 2,
       src: "/media/hero-opt/2.png",
-      alt: "Photography",
+      alt: "Podcast",
       rotation: -6,
       zIndex: 2,
       translateX: -35,
       translateY: 8,
-      link: "https://www.instagram.com/crowneplazamayurvihar/",
+      link: "https://www.youtube.com/@FounderGyaan",
     },
     {
       id: 3,
       src: "/media/hero-opt/3.png",
-      alt: "Audio Recording",
+      alt: "Events",
       rotation: 0,
       zIndex: 3,
       translateX: -10,
       translateY: 0,
-      link: "https://drive.google.com/drive/folders/1XIHrb8xEgduqRUSBBLcaeuR3aji0BQkp",
+      link: "https://drive.google.com/drive/folders/1xUnCVia7I37FZWHN8JfjDGPu4Dgn7tax",
     },
     {
       id: 4,
       src: "/media/hero-opt/4.png",
-      alt: "Post-Production",
+      alt: "Branding",
       rotation: 6,
       zIndex: 4,
       translateX: 15,
       translateY: -8,
-      link: "https://drive.google.com/drive/folders/1xUnCVia7I37FZWHN8JfjDGPu4Dgn7tax?usp=sharing",
+      link: "https://www.instagram.com/theakshayguptaeffect",
     },
     {
       id: 5,
       src: "/media/hero-opt/5.png",
-      alt: "Creative Direction",
+      alt: "UGC Content",
       rotation: 12,
       zIndex: 5,
       translateX: 40,
       translateY: -15,
-      link: "https://www.instagram.com/theakshayguptaeffect/",
+      link: "",
     },
     {
       id: 6,
       src: "/media/hero-opt/6.png",
-      alt: "Studio Mixed Services",
+      alt: "Interior Films",
       rotation: 18,
       zIndex: 6,
       translateX: 65,
       translateY: -22,
+      link: "https://drive.google.com/drive/folders/1XIHrb8xEgduqRUSBBLcaeuR3aji0BQkp",
     },
   ];
 
@@ -189,9 +190,8 @@ export default function Hero() {
 
       <div className="relative z-10 w-full max-w-[95%] md:max-w-[85%] lg:max-w-[80%] mx-auto px-4 md:px-6 pt-20 md:pt-16 pb-8">
         <div
-          className={`transition-all duration-1000 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           {/* Hero Content */}
           <div className="h-full flex flex-col items-center justify-center text-center pt-10">
@@ -311,7 +311,7 @@ export default function Hero() {
           </div>
         </div>
       </div>
-      
+
     </section>
   );
 }
