@@ -239,7 +239,7 @@ export default function Hero() {
               {/* Mobile Stack Component */}
               <div className="lg:hidden flex justify-center mb-8">
                 <Stack
-                  cardDimensions={{ width: 240, height: 360 }}
+                  cardDimensions={{ width: 260, height: 260 }}
                   cardsData={images.map((img) => ({
                     id: img.id,
                     img: img.mobileSrc || img.src,
