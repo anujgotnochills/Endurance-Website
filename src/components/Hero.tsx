@@ -32,6 +32,7 @@ export default function Hero() {
     {
       id: 1,
       src: "/media/hero-opt/1.png",
+      mobileSrc: "/media/hero-opt-mobile/1.svg",
       alt: "Social Media",
       rotation: -12,
       zIndex: 1,
@@ -42,6 +43,7 @@ export default function Hero() {
     {
       id: 2,
       src: "/media/hero-opt/2.png",
+      mobileSrc: "/media/hero-opt-mobile/2.svg",
       alt: "Podcast",
       rotation: -6,
       zIndex: 2,
@@ -52,6 +54,7 @@ export default function Hero() {
     {
       id: 3,
       src: "/media/hero-opt/3.png",
+      mobileSrc: "/media/hero-opt-mobile/3.svg",
       alt: "Events",
       rotation: 0,
       zIndex: 3,
@@ -62,6 +65,7 @@ export default function Hero() {
     {
       id: 4,
       src: "/media/hero-opt/4.png",
+      mobileSrc: "/media/hero-opt-mobile/4.svg",
       alt: "Branding",
       rotation: 6,
       zIndex: 4,
@@ -72,6 +76,7 @@ export default function Hero() {
     {
       id: 5,
       src: "/media/hero-opt/5.png",
+      mobileSrc: "/media/hero-opt-mobile/5.svg",
       alt: "UGC Content",
       rotation: 12,
       zIndex: 5,
@@ -82,6 +87,7 @@ export default function Hero() {
     {
       id: 6,
       src: "/media/hero-opt/6.png",
+      mobileSrc: "/media/hero-opt-mobile/6.svg",
       alt: "Interior Films",
       rotation: 18,
       zIndex: 6,
@@ -233,10 +239,10 @@ export default function Hero() {
               {/* Mobile Stack Component */}
               <div className="lg:hidden flex justify-center mb-8">
                 <Stack
-                  cardDimensions={{ width: 270, height: 270 }}
-                  cardsData={images.slice(0, 4).map((img) => ({
+                  cardDimensions={{ width: 240, height: 360 }}
+                  cardsData={images.map((img) => ({
                     id: img.id,
-                    img: img.src,
+                    img: img.mobileSrc || img.src,
                     link: img.link,
                   }))}
                   randomRotation={true}
