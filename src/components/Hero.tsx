@@ -31,8 +31,8 @@ export default function Hero() {
   const images = [
     {
       id: 1,
-      src: "/media/hero-opt/1.png",
-      mobileSrc: "/media/hero-opt-mobile/1.svg",
+      src: "/media/hero-opt/1.jpg",
+      mobileSrc: "/media/hero-opt-mobile/1.jpg",
       alt: "Social Media",
       rotation: -12,
       zIndex: 1,
@@ -42,8 +42,8 @@ export default function Hero() {
     },
     {
       id: 2,
-      src: "/media/hero-opt/2.png",
-      mobileSrc: "/media/hero-opt-mobile/2.svg",
+      src: "/media/hero-opt/2.jpg",
+      mobileSrc: "/media/hero-opt-mobile/2.jpg",
       alt: "Podcast",
       rotation: -6,
       zIndex: 2,
@@ -53,8 +53,8 @@ export default function Hero() {
     },
     {
       id: 3,
-      src: "/media/hero-opt/3.png",
-      mobileSrc: "/media/hero-opt-mobile/3.svg",
+      src: "/media/hero-opt/3.jpg",
+      mobileSrc: "/media/hero-opt-mobile/3.jpg",
       alt: "Events",
       rotation: 0,
       zIndex: 3,
@@ -64,8 +64,8 @@ export default function Hero() {
     },
     {
       id: 4,
-      src: "/media/hero-opt/4.png",
-      mobileSrc: "/media/hero-opt-mobile/4.svg",
+      src: "/media/hero-opt/4.jpg",
+      mobileSrc: "/media/hero-opt-mobile/4.jpg",
       alt: "Branding",
       rotation: 6,
       zIndex: 4,
@@ -75,8 +75,8 @@ export default function Hero() {
     },
     {
       id: 5,
-      src: "/media/hero-opt/5.png",
-      mobileSrc: "/media/hero-opt-mobile/5.svg",
+      src: "/media/hero-opt/5.jpg",
+      mobileSrc: "/media/hero-opt-mobile/5.jpg",
       alt: "UGC Content",
       rotation: 12,
       zIndex: 5,
@@ -86,8 +86,8 @@ export default function Hero() {
     },
     {
       id: 6,
-      src: "/media/hero-opt/6.png",
-      mobileSrc: "/media/hero-opt-mobile/6.svg",
+      src: "/media/hero-opt/6.jpg",
+      mobileSrc: "/media/hero-opt-mobile/6.jpg",
       alt: "Interior Films",
       rotation: 18,
       zIndex: 6,
