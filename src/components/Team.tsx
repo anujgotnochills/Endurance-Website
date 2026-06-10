@@ -11,38 +11,38 @@ interface TeamMember {
 const teamMembers: TeamMember[] = [
   {
     id: "member-1",
-    name: "Ansh",
-    role: "Senior Videographer",
-    image: "/media/team/ansh.png",
-    quote: "Capturing the emotion behind the moment, perfectly framed."
+    name: "Arnab",
+    role: "Advisor",
+    image: "/media/team/arnab.png",
+    quote: "The strategic mind behind the questions clients haven’t thought to ask yet."
   },
   {
     id: "member-2",
-    name: "Vidhi",
-    role: "Creative Strategist",
-    image: "/media/team/vidhi.png",
-    quote: "Strategy drives the vision. Creativity brings it to life."
+    name: "Raj",
+    role: "Senior Video Editor",
+    image: "/media/team/raj.png",
+    quote: "Turning hours of footage into stories people actually want to watch."
   },
   {
     id: "member-3",
-    name: "Namit",
-    role: "Lead Photographer",
-    image: "/media/team/namit.png",
-    quote: "Finding the extraordinary in the everyday light."
+    name: "Ansh",
+    role: "Cinematographer",
+    image: "/media/team/ansh.png",
+    quote: "Finding the perfect frame before anyone else sees it."
   },
   {
     id: "member-4",
-    name: "Raj",
-    role: "Post-Production Specialist",
-    image: "/media/team/raj.png",
-    quote: "Polishing the story until every single frame shines."
+    name: "Shashwat",
+    role: "Video Editor & Graphic Designer",
+    image: "/media/team/shashwat.png",
+    quote: "Where strong visuals meet thoughtful storytelling."
   },
   {
     id: "member-5",
-    name: "David Chen",
-    role: "Founder & CEO",
-    image: "/media/team/ceo.png",
-    quote: "I love turning big ideas into clean, fun, and easy to use designs."
+    name: "Khushi",
+    role: "Social Media Manager",
+    image: "/media/team/khushi.png",
+    quote: "Making sure great content doesn’t just get posted, it gets noticed."
   },
 ];
 
