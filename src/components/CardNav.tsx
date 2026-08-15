@@ -113,7 +113,7 @@ const CardNav: React.FC<CardNavProps> = ({ items, className = "" }) => {
           >
             Lets Connect
           </a>
-          
+
           <button
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle Menu"
@@ -142,7 +142,7 @@ const CardNav: React.FC<CardNavProps> = ({ items, className = "" }) => {
                 <ArrowUpRight size={16} />
               </Link>
             ))}
-            
+
             <a
               href="https://wa.me/919582156943"
               target="_blank"
