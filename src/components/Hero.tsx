@@ -82,7 +82,7 @@ export default function Hero() {
       zIndex: 5,
       translateX: 40,
       translateY: -15,
-      link: "",
+      link: "https://drive.google.com/drive/folders/1YjDsthz6-MQuyCVCtBH6ZoR0ZQPIDC3u",
     },
     {
       id: 6,

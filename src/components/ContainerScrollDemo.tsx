@@ -19,7 +19,7 @@ export default function ContainerScrollDemo() {
       >
         <video
           src="/media/mac-vid.mp4"
-          className="mx-auto rounded-2xl object-cover h-full object-left-top"
+          className="mx-auto rounded-2xl object-cover h-full w-full object-left-top"
           autoPlay
           muted
           loop
