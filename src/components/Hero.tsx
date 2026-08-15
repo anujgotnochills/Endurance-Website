@@ -32,7 +32,7 @@ export default function Hero() {
     {
       id: 1,
       src: "/media/hero-opt/1.jpg",
-      mobileSrc: "/media/hero-opt-mobile/1.jpg",
+      mobileSrc: "/media/hero-opt-mobile/2.jpg",
       alt: "Social Media",
       rotation: -12,
       zIndex: 1,
@@ -43,7 +43,7 @@ export default function Hero() {
     {
       id: 2,
       src: "/media/hero-opt/2.jpg",
-      mobileSrc: "/media/hero-opt-mobile/2.jpg",
+      mobileSrc: "/media/hero-opt-mobile/1.jpg",
       alt: "Podcast",
       rotation: -6,
       zIndex: 2,
