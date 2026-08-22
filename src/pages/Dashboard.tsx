@@ -1,19 +1,21 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquareQuote, Film, Award, LogOut, LayoutDashboard, Menu, X, Clapperboard } from 'lucide-react';
+import { MessageSquareQuote, Film, Award, LogOut, LayoutDashboard, Menu, X, Clapperboard, Inbox } from 'lucide-react';
 import TestimonialsManager from '@/components/dashboard/TestimonialsManager';
 import ReelsManager from '@/components/dashboard/ReelsManager';
 import LogosManager from '@/components/dashboard/LogosManager';
 import StudioManager from '@/components/dashboard/StudioManager';
+import LeadsManager from '@/components/dashboard/LeadsManager';
 
-type Tab = 'testimonials' | 'reels' | 'logos' | 'studio';
+type Tab = 'testimonials' | 'reels' | 'logos' | 'studio' | 'leads';
 
 const tabs: { id: Tab; label: string; icon: React.ElementType }[] = [
   { id: 'testimonials', label: 'Testimonials', icon: MessageSquareQuote },
   { id: 'reels', label: 'Reels / Videos', icon: Film },
   { id: 'logos', label: 'Partner Logos', icon: Award },
   { id: 'studio', label: 'Studio Showcase', icon: Clapperboard },
+  { id: 'leads', label: 'Leads / Enquiries', icon: Inbox },
 ];
 
 export default function Dashboard() {
@@ -123,6 +125,7 @@ export default function Dashboard() {
           {activeTab === 'reels' && <ReelsManager />}
           {activeTab === 'logos' && <LogosManager />}
           {activeTab === 'studio' && <StudioManager />}
+          {activeTab === 'leads' && <LeadsManager />}
         </div>
       </main>
     </div>

@@ -233,3 +233,73 @@ export function useStudioPhotos() {
 
   return { data, loading, refetch: fetchPhotos };
 }
+
+// ─── Leads (Contact Form Submissions) ───
+export interface Lead {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  business: string;
+  requirements: string;
+  created_at: string;
+}
+
+export function useSubmitLead() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  async function submit(lead: Omit<Lead, 'id' | 'created_at'>) {
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+    try {
+      const { error: sbError } = await supabase.from('leads').insert([lead]);
+      if (sbError) throw sbError;
+      setSuccess(true);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : 'Submission failed. Please try again.';
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function reset() {
+    setError(null);
+    setSuccess(false);
+  }
+
+  return { submit, loading, error, success, reset };
+}
+
+export function useLeads() {
+  const [data, setData] = useState<Lead[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchLeads();
+  }, []);
+
+  async function fetchLeads() {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data: leads, error: sbError } = await supabase
+        .from('leads')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (sbError) throw sbError;
+      setData(leads ?? []);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : 'Failed to fetch leads.';
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return { data, loading, error, refetch: fetchLeads };
+}

@@ -15,6 +15,7 @@ const VideoTestimonials = lazy(() => import("../components/VideoTestimonials"));
 const CurvedLoop = lazy(() => import("../components/CurvedLoop"));
 const StudioMasonry = lazy(() => import("../components/StudioMasonry"));
 const Footer = lazy(() => import("../components/Footer"));
+const ContactForm = lazy(() => import("../components/ContactForm"));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -156,6 +157,15 @@ function Home() {
         </div>
 
         {/* Behind the Scenes (removed) */}
+
+        {/* Contact Form */}
+        <div id="contact" className="smooth-transition section">
+          <LazySection preloadDistance={400} threshold={0.15}>
+            <Suspense fallback={<LoadingFallback />}>
+              <ContactForm />
+            </Suspense>
+          </LazySection>
+        </div>
 
         {/* Footer */}
         <LazySection preloadDistance={300} threshold={0.2}>
