@@ -36,7 +36,6 @@ function App() {
     { label: "Our Work", href: "/#portfolio" },
     { label: "About Us", href: "/#about" },
     { label: "Testimonials", href: "/#testimonials" },
-    { label: "Contact", href: "/#contact" },
   ];
 
   // Dashboard routes — no navbar, no Lenis, no floating chat
