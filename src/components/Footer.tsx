@@ -1,4 +1,5 @@
 import { SOCIAL_URLS } from "@/lib/social";
+import { trackPixelEvent } from "@/lib/pixel";
 
 const socialLinks = [
   { name: "WhatsApp", href: SOCIAL_URLS.whatsapp },
@@ -46,6 +47,11 @@ const Footer = () => {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => {
+                    if (social.name === "WhatsApp") {
+                      trackPixelEvent("WhatsAppClick", { location: "footer" }, true);
+                    }
+                  }}
                   className="inline-flex min-h-[2.125rem] items-center justify-center rounded-full border border-white/20 bg-transparent px-3.5 py-1.5 text-center text-[12px] font-medium leading-none text-white antialiased transition-all duration-300 hover:border-primary hover:text-primary"
                 >
                   {social.name}

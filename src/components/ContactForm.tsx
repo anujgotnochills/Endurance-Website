@@ -1,7 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useSubmitLead } from "@/lib/hooks";
 import { SOCIAL_URLS } from "@/lib/social";
+import { trackPixelEvent } from "@/lib/pixel";
 
 const CONTACT_INFO = [
   {
@@ -101,8 +102,27 @@ export default function ContactForm() {
 
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-80px" });
+  const hasTriggeredFormStart = useRef(false);
+
+  function triggerFormStart() {
+    if (!hasTriggeredFormStart.current) {
+      hasTriggeredFormStart.current = true;
+      trackPixelEvent("LeadFormStart", { form_name: "Contact Form" }, true);
+    }
+  }
+
+  // Track Lead only after successful form submission
+  useEffect(() => {
+    if (success) {
+      trackPixelEvent("Lead", {
+        content_name: "Contact Form Submission",
+        status: "success",
+      });
+    }
+  }, [success]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    triggerFormStart();
     const { name, value } = e.target;
     const updated = { ...form, [name]: value };
     setForm(updated);
@@ -119,6 +139,7 @@ export default function ContactForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    triggerFormStart();
     const allTouched = Object.fromEntries(Object.keys(form).map((k) => [k, true]));
     setTouched(allTouched as typeof touched);
     const validationErrors = validate(form);
@@ -135,6 +156,7 @@ export default function ContactForm() {
   }
 
   function handleReset() {
+    hasTriggeredFormStart.current = false;
     setForm(INITIAL_FORM);
     setErrors({});
     setTouched({});
@@ -216,6 +238,11 @@ export default function ContactForm() {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => {
+                    if (s.name === "WhatsApp") {
+                      trackPixelEvent("WhatsAppClick", { location: "contact_section" }, true);
+                    }
+                  }}
                   className="inline-flex items-center justify-center rounded-full border border-white/20 bg-transparent px-4 py-1.5 text-xs font-medium text-white transition-all duration-300 hover:border-primary hover:text-primary"
                 >
                   {s.name}

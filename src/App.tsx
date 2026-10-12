@@ -12,11 +12,56 @@ import { ReactLenis } from "lenis/react";
 import type { LenisRef } from "lenis/react";
 import { cancelFrame, frame } from "framer-motion";
 import { useEffect, useRef } from "react";
+import { trackPixelEvent } from "@/lib/pixel";
 
 function App() {
   const location = useLocation();
   const lenisRef = useRef<LenisRef>(null);
   const isDashboard = location.pathname.startsWith("/dashboard");
+
+  // Track PageView on SPA route navigation (skip dashboard)
+  const isInitialMount = useRef(true);
+  useEffect(() => {
+    if (isDashboard) return;
+
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return; // Initial page load PageView is already fired by index.html base code
+    }
+
+    trackPixelEvent("PageView");
+  }, [location.pathname, isDashboard]);
+
+  // Track ScrollDepth at 50% and 75% (fires each threshold once per page navigation)
+  useEffect(() => {
+    if (isDashboard) return;
+
+    const firedDepths = new Set<number>();
+
+    const checkScrollDepth = () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      const totalScrollable = document.documentElement.scrollHeight - window.innerHeight;
+
+      if (totalScrollable <= 0) return;
+
+      const percentage = Math.round((scrollY / totalScrollable) * 100);
+
+      if (percentage >= 50 && !firedDepths.has(50)) {
+        firedDepths.add(50);
+        trackPixelEvent("ScrollDepth", { depth: "50%" }, true);
+      }
+
+      if (percentage >= 75 && !firedDepths.has(75)) {
+        firedDepths.add(75);
+        trackPixelEvent("ScrollDepth", { depth: "75%" }, true);
+      }
+    };
+
+    window.addEventListener("scroll", checkScrollDepth, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", checkScrollDepth);
+    };
+  }, [location.pathname, isDashboard]);
 
   // Lenis integration with framer motion
   useEffect(() => {

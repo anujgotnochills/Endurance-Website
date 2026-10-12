@@ -1,5 +1,6 @@
 import { Instagram } from "lucide-react";
 import { SOCIAL_URLS } from "@/lib/social";
+import { trackPixelEvent } from "@/lib/pixel";
 
 const WhatsAppIcon = () => (
   <svg className="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -24,6 +25,7 @@ export default function FloatingChat() {
         href={SOCIAL_URLS.whatsapp}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackPixelEvent("WhatsAppClick", { location: "floating_chat" }, true)}
         className="relative flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-green-600 shadow-lg shadow-green-500/50 transition-transform duration-300 hover:scale-110 sm:h-14 sm:w-14 group"
         title="Chat on WhatsApp"
         aria-label="Chat on WhatsApp"

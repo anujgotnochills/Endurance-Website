@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   CheckCircle,
   Mail,
@@ -10,6 +10,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import emailjs from "@emailjs/browser";
+import { trackPixelEvent } from "@/lib/pixel";
 
 const JoinUs = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -23,9 +24,19 @@ const JoinUs = () => {
     message: "",
   });
 
+  const hasTriggeredFormStart = useRef(false);
+
+  const triggerFormStart = () => {
+    if (!hasTriggeredFormStart.current) {
+      hasTriggeredFormStart.current = true;
+      trackPixelEvent("LeadFormStart", { form_name: "Join Us Form" }, true);
+    }
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    triggerFormStart();
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -89,8 +100,15 @@ Submitted on: ${new Date().toLocaleString()}
 
       console.log("Email sent successfully:", response);
 
+      // Track successful Lead event
+      trackPixelEvent("Lead", {
+        content_name: "Join Us Form Submission",
+        status: "success",
+      });
+
       // Success - show success message
       setIsSubmitted(true);
+      hasTriggeredFormStart.current = false;
       setFormData({
         firstName: "",
         lastName: "",
