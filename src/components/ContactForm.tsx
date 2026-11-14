@@ -17,8 +17,8 @@ const CONTACT_INFO = [
   },
   {
     label: "Phone",
-    value: "+91 9582156943",
-    href: "tel:+919582156943",
+    value: "+91 9315777357",
+    href: "tel:+919315777357",
   },
 ];
 

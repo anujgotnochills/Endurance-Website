@@ -106,7 +106,7 @@ const CardNav: React.FC<CardNavProps> = ({ items, className = "" }) => {
         {/* Right: CTA & Mobile Toggle */}
         <div className="flex flex-1 items-center justify-end gap-3">
           <a
-            href="https://wa.me/919582156943"
+            href="https://wa.me/919315777357"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden sm:inline-flex items-center justify-center px-5 md:px-6 h-10 md:h-11 rounded-full bg-primary text-[12px] md:text-[13px] font-black text-primary-foreground hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20"
@@ -144,7 +144,7 @@ const CardNav: React.FC<CardNavProps> = ({ items, className = "" }) => {
             ))}
 
             <a
-              href="https://wa.me/919582156943"
+              href="https://wa.me/919315777357"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setIsOpen(false)}

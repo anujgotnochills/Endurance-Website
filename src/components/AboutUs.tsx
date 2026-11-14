@@ -56,7 +56,7 @@ const AboutUs = () => {
             
             <div className="mt-1 md:mt-2 flex flex-col sm:flex-row gap-4">
               <a 
-                href="https://wa.me/919582156943"
+                href="https://wa.me/919315777357"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-8 py-4 bg-primary text-white font-bold rounded-full hover:bg-purple-600 hover:scale-105 transition-all shadow-lg shadow-primary/30 inline-flex items-center justify-center gap-2 w-fit"
