@@ -84,8 +84,8 @@ const Footer = () => {
                 <span className="contact-label text-[#666666] uppercase text-xs md:text-sm font-semibold italic tracking-wider mb-1.5 leading-none">
                   Contact Us
                 </span>
-                <a href="tel:+919582156943" className="contact-value m-0 p-0 text-white text-[16px] md:text-[22px] font-semibold leading-tight hover:text-[#a855f7] transition-colors">
-                  +91 9582156943
+                <a href="tel:+919315777357" className="contact-value m-0 p-0 text-white text-[16px] md:text-[22px] font-semibold leading-tight hover:text-[#a855f7] transition-colors">
+                  +91 9315777357
                 </a>
               </div>
             </div>
